@@ -1,4 +1,5 @@
-import java.io.FileWriter;
+import java.io.DataOutputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.concurrent.ThreadLocalRandom;
@@ -13,6 +14,7 @@ public class For_test {
         final int LEVELS = 1_000_000;
         final int arr_size = 3;
         final double divisionParam = 30.0;
+        final double division2 = 4;
         ThreadLocalRandom random = ThreadLocalRandom.current();
         int x; //координаты прямоугольничков
         int y;
@@ -38,7 +40,7 @@ public class For_test {
                     boolean b;
                     do {
                         b = true;
-                        param = random.nextInt((int) (width / divisionParam), (int) (width / 4));
+                        param = random.nextInt((int) (width / divisionParam), (int) (width / division2));
                         x = random.nextInt(0, width - param - 1);
                         y = random.nextInt(0, height - param - 1);
 
@@ -48,7 +50,7 @@ public class For_test {
                     } while (!b);
 
                 } else {
-                    param = random.nextInt((int) (width / divisionParam), (int) (width / 4));
+                    param = random.nextInt((int) (width / divisionParam), (int) (width / division2));
                     x = random.nextInt(0, width - param - 1);
                     y = random.nextInt(0, height - param - 1);
                 }
@@ -62,19 +64,37 @@ public class For_test {
 
                 g += pow(s[2], 2);
             }
-            //g /= (screen.size()-1);
-            if (g > p / 15.0) {
-                screens1.add(screen);
-            } else if (p / 15.0 > g && g > p / 18.0) {
-                screens2.add(screen);
-            } else if (p / 18.0 > g && g > p / 25.0) {
-                screens3.add(screen);
-            } else if (p / 25.0 > g && g > p / 30.0) {
-                screens4.add(screen);
-            } else if (p / 30.0 > g && g > p / 35.0) {
-                screens5.add(screen);
-            } else if (p / 35.0 > g && g > p / 40.0) {
-                screens6.add(screen);
+
+            if (arr_size>2) {
+                //g /= (screen.size()-1);
+                if (g > p / 15.0) {
+                    screens1.add(screen);
+                } else if (p / 15.0 > g && g > p / 18.0) {
+                    screens2.add(screen);
+                } else if (p / 18.0 > g && g > p / 25.0) {
+                    screens3.add(screen);
+                } else if (p / 25.0 > g && g > p / 30.0) {
+                    screens4.add(screen);
+                } else if (p / 30.0 > g && g > p / 45.0) {
+                    screens5.add(screen);
+                } else if (p / 45.0 > g && g > p / 50.0) {
+                    screens6.add(screen);
+                }
+            } else {
+
+                if (g > p / 5.0) {
+                    screens1.add(screen);
+                } else if (p / 5.0 > g && g > p / 8.0) {
+                    screens2.add(screen);
+                } else if (p / 8.0 > g && g > p / 15.0) {
+                    screens3.add(screen);
+                } else if (p / 15.0 > g && g > p / 20.0) {
+                    screens4.add(screen);
+                } else if (p / 20.0 > g && g > p / 25.0) {
+                    screens5.add(screen);
+                } else if (p / 25.0 > g && g > p / 30.0) {
+                    screens6.add(screen);
+                }
             }
         }
 
@@ -86,12 +106,12 @@ public class For_test {
         System.out.println(screens5.size());
         System.out.println(screens6.size());
 
-        FileWriter fileWriter1 = new FileWriter("3screen1.txt", true);
-        FileWriter fileWriter2 = new FileWriter("3screen2.txt", true);
-        FileWriter fileWriter3 = new FileWriter("3screen3.txt", true);
-        FileWriter fileWriter4 = new FileWriter("3screen4.txt", true);
-        FileWriter fileWriter5 = new FileWriter("3screen5.txt", true);
-        FileWriter fileWriter6 = new FileWriter("3screen6.txt", true);
+        DataOutputStream fileWriter1 = new DataOutputStream(new FileOutputStream("1", true));
+        DataOutputStream fileWriter2 = new DataOutputStream(new FileOutputStream("2", true));
+        DataOutputStream fileWriter3 = new DataOutputStream(new FileOutputStream("3", true));
+        DataOutputStream fileWriter4 = new DataOutputStream(new FileOutputStream("4", true));
+        DataOutputStream fileWriter5 = new DataOutputStream(new FileOutputStream("5", true));
+        DataOutputStream fileWriter6 = new DataOutputStream(new FileOutputStream("6", true));
 
         try {
             wr(screens1, fileWriter1);
@@ -130,17 +150,16 @@ public class For_test {
         }
     }
 
-    private static void wr(ArrayList<ArrayList<double[]>> screens, FileWriter fileWriter) throws IOException {
+    private static void wr(ArrayList<ArrayList<double[]>> screens, DataOutputStream fileWriter) throws IOException {
         for (ArrayList<double[]> s: screens) {
             for(double[] d : s){
                 for (double b: d) {
-                    fileWriter.write((int) b + " ");
+                    fileWriter.writeInt((int) b);
                 }
             }
-            fileWriter.append('\n');
+
         }
 
-        fileWriter.flush();
         fileWriter.close();
     }
 }
